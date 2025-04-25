@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import random
+import os
 
 # Store previous messages
 message_history = []
