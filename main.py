@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import random
 import os
+import asyncio
 from flask import Flask
 
 # Store previous messages
@@ -52,9 +53,15 @@ async def on_message(message):
 async def ping(ctx):
     await ctx.send("Pong!")
 
-# Running both Flask web server and Discord bot
-if __name__ == "__main__":
-    # Start the bot in a background task
-    bot.loop.create_task(bot.start(os.environ["DISCORD_TOKEN"]))  # Make sure you have set your token in the environment variables
-    # Run the Flask app, listening on port 8080 to keep it alive
+# Async function to start the bot and the Flask server
+async def start_bot():
+    # Start the Flask app in the background
+    loop = asyncio.get_event_loop()
+    loop.create_task(bot.start(os.environ["DISCORD_TOKEN"]))
+
+    # Run Flask app (this will keep the bot alive)
     app.run(host="0.0.0.0", port=8080)
+
+# Running both the Flask web server and the Discord bot with asyncio
+if __name__ == "__main__":
+    asyncio.run(start_bot())
