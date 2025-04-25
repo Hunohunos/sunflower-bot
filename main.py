@@ -2,15 +2,24 @@ import discord
 from discord.ext import commands
 import random
 import os
+from flask import Flask
 
 # Store previous messages
 message_history = []
 
+# Initialize Flask app for keeping the service alive
+app = Flask(__name__)
+
+# Set up the Discord bot
 intents = discord.Intents.default()
 intents.message_content = True  # Required to read messages
 intents.messages = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
+
+@app.route("/")
+def home():
+    return "Bot is alive"
 
 @bot.event
 async def on_ready():
@@ -43,4 +52,9 @@ async def on_message(message):
 async def ping(ctx):
     await ctx.send("Pong!")
 
-bot.run(os.environ["DISCORD_TOKEN"])
+# Running both Flask web server and Discord bot
+if __name__ == "__main__":
+    # Start the bot in a background task
+    bot.loop.create_task(bot.start(os.environ["DISCORD_TOKEN"]))  # Make sure you have set your token in the environment variables
+    # Run the Flask app, listening on port 8080 to keep it alive
+    app.run(host="0.0.0.0", port=8080)
