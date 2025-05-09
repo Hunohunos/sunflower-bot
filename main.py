@@ -71,7 +71,7 @@ async def on_message(message):
 async def ping(ctx):
     await ctx.send("Pong!")
 
-@bot.command(name="Fuhgeddaboudit")
+@bot.command(name="fuhgeddaboudit")
 @commands.has_permissions(manage_messages=True)
 async def clearhistory(ctx):
     """Clear the message history (admin only)."""
