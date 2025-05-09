@@ -56,8 +56,9 @@ async def on_message(message):
                 except discord.NotFound:
                     pass
 
-            # Add the message content
-            content_to_send += random_message.content
+            # Clean the message of any bot self-mentions
+            cleaned_content = random_message.content.replace(f"<@{bot.user.id}>", "")
+            content_to_send += cleaned_content
 
             # Include image attachments, if any
             files = [await a.to_file() for a in random_message.attachments] if random_message.attachments else None
